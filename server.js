@@ -29,6 +29,7 @@ app.use(app.router);
 
 // routes
 app.get('/', require('./app/routes/index'));
+app.get('/image/:url', require('./app/routes/image'));
 
 // start that server
-app.listen(app.get('port'));;
+app.listen(app.get('port'));
