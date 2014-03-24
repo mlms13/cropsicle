@@ -2,9 +2,10 @@
   "name": "cropsicle",
   "version": "0.0.0",
   "description": "A simple webapp for taking screenshots of other webpages and cropping them to your liking.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
