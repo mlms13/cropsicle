@@ -1,3 +1,6 @@
+# ignore gulp-compiled files
+public
+
 lib-cov
 *.seed
 *.log

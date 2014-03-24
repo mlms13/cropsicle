@@ -20,11 +20,15 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 console.log('The NODE_ENV is ' + app.get('env'));
 
+// in our development environment, inject the livereload script into non-static files
+app.configure('development', function () {
+    app.use(require('connect-livereload')());
+});
+
 app.use(app.router);
 
 // routes
 app.get('/', require('./app/routes/index'));
-
 
 // start that server
 app.listen(app.get('port'));;
