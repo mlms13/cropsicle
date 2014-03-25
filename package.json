@@ -11,7 +11,14 @@
     "type": "git",
     "url": "https://github.com/mlms13/cropsicle.git"
   },
-  "author": "mlms13, jvalle",
+  "contributors": [
+    {
+      "name": "Michael Martin-Smucker"
+    },
+    {
+      "name": "Jason Valle"
+    }
+  ],
   "license": "BSD",
   "bugs": {
     "url": "https://github.com/mlms13/cropsicle/issues"
