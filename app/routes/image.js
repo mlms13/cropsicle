@@ -1,6 +1,10 @@
 var webshot = require('webshot');
 
-module.exports = function (req, res) {
+module.exports.redirect = function (req, res) {
+    res.redirect('/');
+};
+
+module.exports.load = function (req, res) {
     // TODO: validate that we're receiving an actual URL
     // before we try to take a screenshot
 

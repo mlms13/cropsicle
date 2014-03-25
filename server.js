@@ -27,9 +27,13 @@ app.configure('development', function () {
 
 app.use(app.router);
 
-// routes
+// require the route handlers
+var imageRoute = require('./app/routes/image')
+
+// handle routes
 app.get('/', require('./app/routes/index'));
-app.get('/image/:url', require('./app/routes/image'));
+app.get('/image', imageRoute.redirect);
+app.get('/image/:url', imageRoute.load);
 
 // start that server
 app.listen(app.get('port'));
