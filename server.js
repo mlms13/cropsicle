@@ -28,11 +28,11 @@ app.configure('development', function () {
 app.use(app.router);
 
 // require the route handlers
-var imageRoute = require('./app/routes/image')
+var index = require('./app/routes/index'),
+	imageRoute = require('./app/routes/image'),
     crop = require('./app/routes/crop');
 
-// handle routes
-app.get('/', require('./app/routes/index'));
+app.get('/', index);
 app.post('/crop', crop.handlePost);
 app.get('/image', imageRoute.redirect);
 app.get('/image/:url', imageRoute.load);
