@@ -33,7 +33,9 @@ var index = require('./app/routes/index'),
     crop = require('./app/routes/crop');
 
 app.get('/', index);
-app.post('/crop', crop.handlePost);
+app.get('/crop', crop.submitUrl);
+app.post('/crop', crop.submitUrl);
+app.get('/crop/:url', crop.handleGetUrl);
 app.get('/image', imageRoute.redirect);
 app.get('/image/:url', imageRoute.load);
 
