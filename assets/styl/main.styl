@@ -1,0 +1,37 @@
+@import url('http://fonts.googleapis.com/css?family=Cantarell')
+
+header
+    font-family 'Catarell', Helvetica
+    min-height 215px
+
+.top
+    left 50%
+    position absolute
+    transform translateX(-50%)
+    transition all 1050ms 400ms
+
+    &.crop-time
+        left 0
+        transform translateX(0)
+
+.logo
+    display block
+    height 150px
+    margin auto
+    width 150px
+    transition all 1050ms 400ms    
+
+    .crop-time &
+        height 75px
+        width 75px
+
+.title
+    margin-bottom 10px
+    margin-top 0
+    transition opacity 400ms
+
+    .crop-time &
+        opacity 0
+
+.start-form 
+    text-align center
