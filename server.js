@@ -35,9 +35,9 @@ var index = require('./app/routes/index'),
 app.get('/', index);
 app.get('/crop', crop.submitUrl);
 app.post('/crop', crop.submitUrl);
-app.get('/crop/:url', crop.handleGetUrl);
+app.get('/crop/:width/:height/:url', crop.handleGetUrl);
 app.get('/image', imageRoute.redirect);
-app.get('/image/:url', imageRoute.load);
+app.get('/image/:width/:height/:url', imageRoute.loadImage);
 
 // start that server
 app.listen(app.get('port'));

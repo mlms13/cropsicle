@@ -4,19 +4,18 @@ module.exports.redirect = function (req, res) {
     res.redirect('/');
 };
 
-module.exports.load = function (req, res) {
-    // TODO: validate that we're receiving an actual URL
+module.exports.loadImage = function (req, res) {
+    // TODO: validate that we're receiving valid parameters
     // before we try to take a screenshot
 
     // just playing around with the options
     var wsOptions = {
         screenSize: {
-            width: 320,
-            height: 'all'
+            width: req.params.width,
+            height: 768
         },
         shotSize: {
-            width: 'window',
-            height: 'all'
+            height: req.params.height
         }
     };
 
