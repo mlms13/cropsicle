@@ -11,7 +11,17 @@ html(lang="en-us", class="no-js")
                 img.logo(src="/images/Logo.png", alt="Webchopper Logo")
                 h1.title Webchopper
         block content
-        footer
-            p Copyright or something
+        footer.page-foot
+            form.form-inline.crop-tools
+                .input-group
+                    label(for="crop-width") Width:
+                    input(type="number" id="crop-width")
+                .input-group
+                    label(for="crop-height") Height:
+                    input(type="number" id="crop-height")
+                .input-group
+                    label(for="crop-ratio") Ratio:
+                    input(type="number" id="crop-ratio")
+            p.copyright &copy; Copyright or something
         script(src="/js/imagecrop.js")
         block scripts

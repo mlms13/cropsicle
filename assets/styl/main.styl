@@ -1,8 +1,16 @@
 @import url('http://fonts.googleapis.com/css?family=Cantarell')
 
+$primary = #bada55
+$primaryDark = darken($primary, 20%)
+
+body
+    font 16px 'Catarell', sans-serif
+
 header
-    font-family 'Catarell', Helvetica
     min-height 215px
+
+label
+    display block
 
 .top
     left 50%
@@ -38,3 +46,26 @@ header
 
 #img-placeholder
     margin 0 auto
+
+.page-foot
+    background $primary
+    border-top 1px solid $primaryDark
+    box-shadow 0 -2px 8px rgba(0, 0, 0, 0.3) 
+    bottom 0
+    left 0
+    position fixed
+    right 0
+
+.crop-tools
+    display flex
+    justify-content center
+    padding 12px 0
+
+.form-inline
+    .input-group
+        float left
+
+.copyright
+    left 0
+    position absolute
+    top 0
