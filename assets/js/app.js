@@ -5,8 +5,6 @@
         loadImg;
 
     loadImg = function (e) {
-        console.log(e.target);
-
         var cropped = new ImageCrop({
             image: e.target
         });
@@ -16,16 +14,18 @@
 
     submitForm = function (e) {
         var url = e.target.querySelector('.start-input').value,
+            placeholder = document.getElementById('img-placeholder'),
             img = new Image();
 
         // prevent the form from submitting
         e.preventDefault();
 
-        // TODO: don't append the image to a stupid place
-        document.body.appendChild(img);
+        // TODO: show a loading animation
+        placeholder.style.width = '1024px';
+        placeholder.className = 'loading';
+        placeholder.appendChild(img);
         img.src = '/image/1024/all/' + encodeURIComponent(url);
 
-        // TODO: show a spinner until the image has loaded
         img.addEventListener('load', loadImg);
 
         // return false, just in case
