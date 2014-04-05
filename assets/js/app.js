@@ -5,9 +5,38 @@
         loadImg;
 
     loadImg = function (e) {
+        var widthBox = document.getElementById('crop-width'),
+            heightBox = document.getElementById('crop-height'),
+            ratioBox = document.getElementById('crop-ratio');
+
         var cropped = new ImageCrop({
             image: e.target
         });
+
+        // set up event listeners for the crop tools
+        widthBox.addEventListener('keyup', function () {
+            ratioBox.value = widthBox.value / heightBox.value;
+            cropped.set('outputWidth', parseFloat(widthBox.value));
+            cropped.set('ratio', parseFloat(ratioBox.value));
+        });
+
+        heightBox.addEventListener('keyup', function () {
+            ratioBox.value = widthBox.value / heightBox.value;
+            cropped.set('outputHeight', parseFloat(heightBox.value));
+            cropped.set('ratio', parseFloat(ratioBox.value));
+        });
+
+        ratioBox.addEventListener('keyup', function () {
+            cropped.set('ratio', parseFloat(ratioBox.value));
+        });
+
+        document.getElementById('crop-it').addEventListener('click', function (e) {
+            e.preventDefault();
+            window.open(cropped.save());
+        });
+
+        // and fade them in
+        document.querySelector('.crop-tools').style.opacity = 1;
     };
 
     submitForm = function (e) {
