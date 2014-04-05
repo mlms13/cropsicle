@@ -26,6 +26,8 @@ window.ImageCrop = function (config) {
                   config.ratio || false;
   options.handleSize = config.handleSize || 10;
   options.handleFill = config.handleFill || 'rgba(0, 0, 0, 0.65)';
+  options.keyboard = config.keyboard || true;
+  options.keyboardStep = config.keyboardStep || 5;
 
   function drawInitialState () {
     // clear everything on the canvas
@@ -36,39 +38,8 @@ window.ImageCrop = function (config) {
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
 
-  function drawSelection () {
-    drawInitialState();
-
-    // fix a ratio if required
-    if (options.ratio) {
-      var absWidth = Math.abs(self.cropCoords.width),
-          absHeight = Math.abs(self.cropCoords.height),
-          minSideLength = Math.min(absWidth / options.ratio, absHeight);
-
-      self.cropCoords.width = self.cropCoords.width < 0 ?
-                              -1 * minSideLength * options.ratio :
-                              minSideLength * options.ratio;
-
-      self.cropCoords.height = self.cropCoords.height < 0 ?
-                              -1 * minSideLength :
-                              minSideLength;
-    }
-
-    ctx.drawImage(options.image, self.cropCoords.x, self.cropCoords.y,
-                  self.cropCoords.width, self.cropCoords.height,
-                  self.cropCoords.x, self.cropCoords.y,
-                  self.cropCoords.width, self.cropCoords.height);
-
-    // draw resize handles
-    ctx.fillStyle = options.handleFill;
-    ctx.fillRect(self.cropCoords.x - (options.handleSize / 2), self.cropCoords.y - (options.handleSize / 2), options.handleSize, options.handleSize);
-    ctx.fillRect(self.cropCoords.x + self.cropCoords.width - (options.handleSize / 2), self.cropCoords.y - (options.handleSize / 2), options.handleSize, options.handleSize);
-    ctx.fillRect(self.cropCoords.x - (options.handleSize / 2), self.cropCoords.y + self.cropCoords.height - (options.handleSize / 2), options.handleSize, options.handleSize);
-    ctx.fillRect(self.cropCoords.x + self.cropCoords.width - (options.handleSize / 2), self.cropCoords.y + self.cropCoords.height - (options.handleSize / 2), options.handleSize, options.handleSize);
-  }
-
   // initialize, by converting the supplied image to a canvas
-  this.init = function () {
+  function init () {
     var currentMouseState = false,
         dragCoords = {};
 
@@ -85,6 +56,47 @@ window.ImageCrop = function (config) {
     // draw the image and hide the original image
     drawInitialState();
     options.image.style.visibility = 'hidden';
+
+    // allow changing selection position with keyboard
+    if (options.keyboard) {
+      var horizontal,
+          vertical;
+
+      canvas.setAttribute('tabindex', '1');
+      canvas.style.outline = 'none';
+      canvas.addEventListener('keydown', function (e) {
+        var stepValue;
+
+        if (e.keyCode >= 37 && e.keyCode <= 40) {
+          // Allow faster movement if shift key is down
+          if (e.shiftKey) {
+            stepValue = options.keyboardStep * 10;
+          } else {
+            stepValue = options.keyboardStep;
+          }
+          if (e.keyCode === 37) { // left
+            horizontal = - stepValue;
+            vertical = 0;
+          } else if (e.keyCode === 38) { // up
+            horizontal = 0;
+            vertical = - stepValue;
+          } else if (e.keyCode === 39) { // right
+            horizontal = stepValue;
+            vertical = 0;
+          } else if (e.keyCode === 40) { // down
+            horizontal = 0;
+            vertical = stepValue;
+          }
+
+          self.cropCoords.x += horizontal;
+          self.cropCoords.y += vertical;
+          self.drawSelection();
+
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }, false);
+    }
 
     // handle moving when the mouse is down
     canvas.addEventListener('mousemove', function (e) {
@@ -115,15 +127,9 @@ window.ImageCrop = function (config) {
         self.cropCoords.y = dragCoords.y + canvasY - dragCoords.y - dragCoords.mouseY;
       }
 
-      // collision detection
-      if (self.cropCoords.x < 0) self.cropCoords.x = 0;
-      if (self.cropCoords.y < 0) self.cropCoords.y = 0;
-      if (self.cropCoords.x + self.cropCoords.width > ctx.canvas.width) self.cropCoords.x = ctx.canvas.width - self.cropCoords.width;
-      if (self.cropCoords.y + self.cropCoords.height > ctx.canvas.height) self.cropCoords.y = ctx.canvas.height - self.cropCoords.height;
-
       if (currentMouseState) {
         // draw the selection box
-        drawSelection();
+        self.drawSelection();
       } else {
         // determine where the mouse is in the canvas selection
         if (canvasX > self.cropCoords.x - (options.handleSize / 2) &&
@@ -215,7 +221,7 @@ window.ImageCrop = function (config) {
     }, false);
 
     // handle mouse up / mouse out
-    var endMouseMove = function () {
+    function endMouseMove () {
       // handle dragging from not the top left
       if (self.cropCoords.width < 0) {
         self.cropCoords.width = Math.abs(self.cropCoords.width);
@@ -229,6 +235,44 @@ window.ImageCrop = function (config) {
     };
     canvas.addEventListener('mouseup', endMouseMove, false);
     canvas.addEventListener('mouseout', endMouseMove, false);
+  };
+  init();
+
+  this.drawSelection = function () {
+    drawInitialState();
+
+    // fix a ratio if required
+    if (options.ratio) {
+      var absWidth = Math.abs(self.cropCoords.width),
+          absHeight = Math.abs(self.cropCoords.height),
+          minSideLength = Math.min(absWidth / options.ratio, absHeight);
+
+      self.cropCoords.width = self.cropCoords.width < 0 ?
+                              -1 * minSideLength * options.ratio :
+                              minSideLength * options.ratio;
+
+      self.cropCoords.height = self.cropCoords.height < 0 ?
+                              -1 * minSideLength :
+                              minSideLength;
+    }
+
+    // collision detection
+    if (self.cropCoords.x < 0) self.cropCoords.x = 0;
+    if (self.cropCoords.y < 0) self.cropCoords.y = 0;
+    if (self.cropCoords.x + self.cropCoords.width > ctx.canvas.width) self.cropCoords.x = ctx.canvas.width - self.cropCoords.width;
+    if (self.cropCoords.y + self.cropCoords.height > ctx.canvas.height) self.cropCoords.y = ctx.canvas.height - self.cropCoords.height;
+
+    ctx.drawImage(options.image, self.cropCoords.x, self.cropCoords.y,
+                  self.cropCoords.width, self.cropCoords.height,
+                  self.cropCoords.x, self.cropCoords.y,
+                  self.cropCoords.width, self.cropCoords.height);
+
+    // draw resize handles
+    ctx.fillStyle = options.handleFill;
+    ctx.fillRect(self.cropCoords.x - (options.handleSize / 2), self.cropCoords.y - (options.handleSize / 2), options.handleSize, options.handleSize);
+    ctx.fillRect(self.cropCoords.x + self.cropCoords.width - (options.handleSize / 2), self.cropCoords.y - (options.handleSize / 2), options.handleSize, options.handleSize);
+    ctx.fillRect(self.cropCoords.x - (options.handleSize / 2), self.cropCoords.y + self.cropCoords.height - (options.handleSize / 2), options.handleSize, options.handleSize);
+    ctx.fillRect(self.cropCoords.x + self.cropCoords.width - (options.handleSize / 2), self.cropCoords.y + self.cropCoords.height - (options.handleSize / 2), options.handleSize, options.handleSize);
   };
 
   // update canvas with new size and save content as png
@@ -263,14 +307,14 @@ window.ImageCrop = function (config) {
     if (typeof prop === 'object') {
       // if an object is passed as the first parameter, loop through it
       for (objProp in prop) {
-        self.set(objProp, prop[objProp])
+        self.set(objProp, prop[objProp]);
       }
     } else {
       // otherwise assume we were given a property
       // update that property
       options[prop] = value;
       // and redraw
-      drawSelection();
+      self.drawSelection();
     }
   };
 };

@@ -8,8 +8,6 @@
         var cropped = new ImageCrop({
             image: e.target
         });
-
-        cropped.init();
     };
 
     submitForm = function (e) {
