@@ -1,15 +1,36 @@
-document.querySelector('form').addEventListener('submit', function (e) {
+(function () {
     "use strict";
-    var url = e.target.querySelector('.start-input').value,
-        img = new Image();
 
-    // prevent the form from submitting
-    e.preventDefault();
+    var submitForm,
+        loadImg;
 
-    img.src = '/image/1024/all/' + encodeURIComponent(url);
+    loadImg = function (e) {
+        console.log(e.target);
 
-    // TODO: show a spinner until the image has loaded
-    // TODO: insert this somewhere else in the document
-    document.body.appendChild(img);
-    return false;
-});
+        var cropped = new ImageCrop({
+            image: e.target
+        });
+
+        cropped.init();
+    };
+
+    submitForm = function (e) {
+        var url = e.target.querySelector('.start-input').value,
+            img = new Image();
+
+        // prevent the form from submitting
+        e.preventDefault();
+
+        // TODO: don't append the image to a stupid place
+        document.body.appendChild(img);
+        img.src = '/image/1024/all/' + encodeURIComponent(url);
+
+        // TODO: show a spinner until the image has loaded
+        img.addEventListener('load', loadImg);
+
+        // return false, just in case
+        return false;
+    };
+
+    document.querySelector('form').addEventListener('submit', submitForm);
+}());
