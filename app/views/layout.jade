@@ -12,7 +12,7 @@ html(lang="en-us", class="no-js")
                 h1.title Webchopper
         block content
         footer.page-foot
-            form.form-inline.crop-tools
+            form.crop-tools
                 .input-group
                     label(for="crop-width") Width:
                     input(type="number" id="crop-width")
@@ -22,7 +22,7 @@ html(lang="en-us", class="no-js")
                 .input-group
                     label(for="crop-ratio") Ratio:
                     input(type="number" id="crop-ratio")
-                button#crop-it Crop
+                .input-group: button#crop-it Crop
             p.copyright &copy; Copyright or something
         script(src="/js/imagecrop.js")
         block scripts
