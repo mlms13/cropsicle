@@ -8,11 +8,17 @@
         placeholder = document.getElementById('img-placeholder');
 
     loadImg = function (e) {
-        var widthBox = document.getElementById('crop-width'),
+        var cropped,
+            widthBox = document.getElementById('crop-width'),
             heightBox = document.getElementById('crop-height'),
             ratioBox = document.getElementById('crop-ratio');
 
-        var cropped = new ImageCrop({
+        // update the img container after img loads
+        placeholder.className = '';
+        placeholder.style.width = e.target.width + 'px';
+
+        // run our crop plugin
+        cropped = new ImageCrop({
             image: e.target
         });
 
@@ -50,8 +56,8 @@
         e.preventDefault();
 
         // TODO: show a loading animation
-        placeholder.style.width = '1024px';
         placeholder.className = 'loading';
+        placholder.textContent = '';
         placeholder.appendChild(img);
         img.src = '/image/1024/all/' + encodeURIComponent(url);
 
@@ -80,6 +86,7 @@
 
             img.src = data;
             img.addEventListener('load', loadImg);
+            placeholder.textContent = '';
             placeholder.appendChild(img);
         };
 
