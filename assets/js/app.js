@@ -3,7 +3,8 @@
 
     var submitForm,
         loadImg,
-        handleImgDrag,
+        handleImgIn,
+        handleImgOut,
         handleImgDrop,
         placeholder = document.getElementById('img-placeholder');
 
@@ -57,7 +58,7 @@
 
         // TODO: show a loading animation
         placeholder.className = 'loading';
-        placholder.textContent = '';
+        placeholder.textContent = '';
         placeholder.appendChild(img);
         img.src = '/image/1024/all/' + encodeURIComponent(url);
 
@@ -67,9 +68,15 @@
         return false;
     };
 
-    handleImgDrag = function (e) {
+    handleImgIn = function (e) {
         e.preventDefault();
         e.stopPropagation();
+
+        placeholder.classList.add('over');
+    };
+
+    handleImgOut = function (e) {
+        placeholder.classList.remove('over');
     };
 
     handleImgDrop = function (e) {
@@ -107,11 +114,12 @@
 
     // set up Drag and Drop if the browser supports file manipulation
     if (window.File && window.FileReader && window.FileList) {
-        // style the placholder correctly
+        // style the placeholder correctly
         placeholder.classList.add('droppable');
         placeholder.textContent = "...or drop an image here"
 
-        placeholder.addEventListener('dragover', handleImgDrag);
+        placeholder.addEventListener('dragover', handleImgIn);
+        placeholder.addEventListener('dragleave', handleImgOut);
         placeholder.addEventListener('drop', handleImgDrop);
     }
     document.querySelector('form').addEventListener('submit', submitForm);
