@@ -2,7 +2,10 @@
     "use strict";
 
     var submitForm,
-        loadImg;
+        loadImg,
+        handleImgDrag,
+        handleImgDrop,
+        placeholder = document.getElementById('img-placeholder');
 
     loadImg = function (e) {
         var widthBox = document.getElementById('crop-width'),
@@ -41,7 +44,6 @@
 
     submitForm = function (e) {
         var url = e.target.querySelector('.start-input').value,
-            placeholder = document.getElementById('img-placeholder'),
             img = new Image();
 
         // prevent the form from submitting
@@ -59,5 +61,44 @@
         return false;
     };
 
+    handleImgDrag = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
+    handleImgDrop = function (e) {
+        var file,
+            reader = new FileReader();
+
+        e.stopPropagation();
+        e.preventDefault();
+
+        // set up an event handler for our file reading
+        reader.onload = function () {
+            var data = reader.result,
+                img = new Image();
+
+            img.src = data;
+            img.addEventListener('load', loadImg);
+            placeholder.appendChild(img);
+        };
+
+        // TODO: warn the user if they dropped multiple files at once
+        // or even better... handle it
+        if (e.dataTransfer.files.length > 1) {
+            // ... do something here
+        }
+
+        // grab the first file in the array and dump it into the cropper
+        file = e.dataTransfer.files[0];
+
+        // and only continue if we're dealing with an image
+        if (file.type.match('image.*')) {
+            reader.readAsDataURL(file);
+        }
+    };
+
+    placeholder.addEventListener('dragover', handleImgDrag);
+    placeholder.addEventListener('drop', handleImgDrop);
     document.querySelector('form').addEventListener('submit', submitForm);
 }());
