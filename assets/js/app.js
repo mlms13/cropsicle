@@ -60,9 +60,9 @@
         placeholder.className = 'loading';
         placeholder.textContent = '';
         placeholder.appendChild(img);
-        img.src = '/image/1024/all/' + encodeURIComponent(url);
 
         img.addEventListener('load', loadImg);
+        img.src = '/image/1024/all/' + encodeURIComponent(url);
 
         // return false, just in case
         return false;
@@ -91,8 +91,8 @@
             var data = reader.result,
                 img = new Image();
 
-            img.src = data;
             img.addEventListener('load', loadImg);
+            img.src = data;
             placeholder.textContent = '';
             placeholder.appendChild(img);
         };
