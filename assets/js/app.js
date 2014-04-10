@@ -98,7 +98,14 @@
         }
     };
 
-    placeholder.addEventListener('dragover', handleImgDrag);
-    placeholder.addEventListener('drop', handleImgDrop);
+    // set up Drag and Drop if the browser supports file manipulation
+    if (window.File && window.FileReader && window.FileList) {
+        // style the placholder correctly
+        placeholder.classList.add('droppable');
+        placeholder.textContent = "...or drop an image here"
+
+        placeholder.addEventListener('dragover', handleImgDrag);
+        placeholder.addEventListener('drop', handleImgDrop);
+    }
     document.querySelector('form').addEventListener('submit', submitForm);
 }());
