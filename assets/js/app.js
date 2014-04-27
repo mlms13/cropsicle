@@ -20,7 +20,9 @@
 
         // run our crop plugin
         cropped = new ImageCrop({
-            image: e.target
+            image: e.target,
+            imageType: 'image/jpeg',
+            imageQuality: 0.7
         });
 
         // set up event listeners for the crop tools
